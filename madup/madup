@@ -2,6 +2,48 @@
 set -e
 
 #!/bin/bash
+BASE_DIR=${XDG_CONFIG_HOME:-$HOME}
+MADUP_DIR=${MADUP_DIR-"$BASE_DIR/.madup"}
+
+function install_madara() {
+    os=$(uname -s | awk '{ print tolower($0) }')
+    machine=$(uname -m)
+
+    case "$os" in
+      "darwin")
+        os="apple-darwin"
+        ;;
+      "linux")
+        os="unknown-linux-gnu"
+        ;;
+      *)
+        echo "Unknown OS"
+        exit 1
+        ;;
+    esac
+
+    case "$machine" in
+      "x86_64")
+        machine="x86_64"
+        ;;
+      "arm64"*)
+        machine="aarch64"
+        ;;
+      *)
+        echo "Unknown machine"
+        exit 1
+        ;;
+    esac
+
+    PkgName="${machine}-${os}-madara"
+
+    curl -LO "https://github.com/Generative-Labs/madara-and-dojo/releases/latest/download/${PkgName}.zip"
+
+    mkdir -p ${MADUP_DIR}
+
+    unzip ${PkgName}.zip -d ${MADUP_DIR}
+    mv ${MADUP_DIR}/${PkgName}/madara ${MADUP_DIR}/bin
+}
 
 function update_config() {
     # Add your update code here
@@ -12,9 +54,10 @@ function update_config() {
 }
 
 function usage() {
-    echo "Usage: $0 [init|update-config]"
+    echo "Usage: $0 [init|update-sozo-config|install-madara]"
     echo "init:   Initialize the madup"
-    echo "update: Update the sozo config"
+    echo "install-madara: Install madara"
+    echo "update-sozo-config: Update the sozo config"
     exit 1
 }
 
@@ -30,7 +73,11 @@ case $1 in
 
         dojoup
         ;;
-    update)
+    install-madara)
+        echo "Install madara..."
+        install_madara
+        ;;
+    update-sozo-config)
         echo "Updating the Scarb.toml ..."
         # Add your update code here
 
