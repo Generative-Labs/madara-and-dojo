@@ -1,6 +1,42 @@
 #!/usr/bin/env bash
 set -e
 
-curl -L https://install.dojoengine.org | bash
+#!/bin/bash
 
-dojoup
+function update_config() {
+    # Add your update code here
+    awk '/rpc_url =/ {$0="rpc_url = \"http://localhost:9944/\""}1' Scarb.toml > temp && mv temp Scarb.toml
+    awk '/# Default account for katana with seed = 0/ {$0="# Default account for madara 0x3"}1' Scarb.toml > temp && mv temp Scarb.toml
+    awk '/account_address =/ {$0="account_address = \"0x3\""}1' Scarb.toml > temp && mv temp Scarb.toml
+    awk '/private_key =/ {$0="private_key = \"0x00c1cf1490de1352865301bb8705143f3ef938f97fdf892f1090dcb5ac7bcd1d\""}1' Scarb.toml > temp && mv temp Scarb.toml
+}
+
+function usage() {
+    echo "Usage: $0 [init|update-config]"
+    echo "init:   Initialize the madup"
+    echo "update: Update the sozo config"
+    exit 1
+}
+
+if [ "$#" -eq 0 ]; then
+    usage
+fi
+
+case $1 in
+    init)
+        echo "Initializing the system..."
+        # Add your init code here
+        curl -L https://install.dojoengine.org | bash
+
+        dojoup
+        ;;
+    update)
+        echo "Updating the Scarb.toml ..."
+        # Add your update code here
+
+        update_config
+        ;;
+    *)
+        usage
+        ;;
+esac
