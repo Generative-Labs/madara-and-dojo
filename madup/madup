@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+curl -L https://install.dojoengine.org | bash
+
+dojoup
