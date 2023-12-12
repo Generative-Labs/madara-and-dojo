@@ -67,14 +67,14 @@ fi
 
 case $1 in
     init)
+        echo "Install madara..."
+        install_madara
+
         echo "Initializing the dojoup..."
         # Add your init code here
         curl -L https://install.dojoengine.org | bash
 
         dojoup
-
-        echo "Install madara..."
-        install_madara
         ;;
     install-madara)
         echo "Install madara..."
