@@ -47,6 +47,8 @@ esac
 if [[ ":$PATH:" != *":${MADUP_BIN_DIR}:"* ]]; then
     # Add the madup directory to the path and ensure the old PATH variables remain.
     echo >> $PROFILE && echo "export PATH=\"\$PATH:$MADUP_BIN_DIR\"" >> $PROFILE
+
+    source ${PROFILE}
 fi
 
 echo && echo "Detected your preferred shell is ${PREF_SHELL} and added madup to PATH. Run 'source ${PROFILE}' or start a new terminal session to use madup."
