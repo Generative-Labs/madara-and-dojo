@@ -9,6 +9,4 @@ madup is built around a set of development tools - madara, Torii and Sozo. Insta
 curl -L https://raw.githubusercontent.com/Generative-Labs/madara-and-dojo/main/madup/install | bash
 
 madup init
-
-madup install-madara
 ```
