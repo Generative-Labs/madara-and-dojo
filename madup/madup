@@ -5,6 +5,7 @@ set -e
 BASE_DIR=${XDG_CONFIG_HOME:-$HOME}
 MADUP_DIR=${MADUP_DIR-"$BASE_DIR/.madup"}
 DOJOUP_DIR=${DOJOUP_DIR-"$BASE_DIR/.dojo"}
+DOJOUP_PATH="$DOJOUP_DIR/bin"
 
 function install_madara() {
     os=$(uname -s | awk '{ print tolower($0) }')
@@ -92,7 +93,10 @@ function source_profile() {
         exit 1
     esac
 
-    echo "Detected your preferred shell is $PREF_SHELL. Run 'source $PROFILE' or start a new terminal session to use dojoup."
+    if [[ ":$PATH:" != *":$DOJOUP_PATH:"* ]]; then
+        echo "export PATH=\"${DOJOUP_PATH}:\$PATH\"" >> $PROFILE
+        source $PROFILE
+    fi
 }
 
 
@@ -105,13 +109,11 @@ case $1 in
         echo "Install madara..."
         install_madara
 
-        echo "Initializing the dojoup..."
+        echo "Install the dojoup..."
         # Add your init code here
         curl -L https://install.dojoengine.org | bash
 
-        source_profile
-
-        dojoup
+        exec $SHELL
         ;;
     install-madara)
         echo "Install madara..."
