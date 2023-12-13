@@ -113,7 +113,7 @@ case $1 in
 
         source_profile
 
-        dojoup
+        ${DOJOUP_DIR}/bin/dojoup
         ;;
     install-madara)
         echo "Install madara..."
