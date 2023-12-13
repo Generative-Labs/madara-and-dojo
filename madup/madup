@@ -69,16 +69,11 @@ function usage() {
     exit 1
 }
 
-if [ "$#" -eq 0 ]; then
-    usage
-fi
-
-
 function source_profile() {
     # Store the correct profile file (i.e. .profile for bash or .zshenv for ZSH).
     case $SHELL in
     */zsh)
-        PROFILE=${ZDOTDIR-"$HOME"}/.zshenv
+        PROFILE=${ZDOTDIR-"$HOME"}/.zshrc
         PREF_SHELL=zsh
         ;;
     */bash)
@@ -94,13 +89,16 @@ function source_profile() {
         PREF_SHELL=ash
         ;;
     *)
-        echo "dojoup: could not detect shell, manually add ${DOJOUP_DIR} to your PATH."
         exit 1
     esac
 
-
-    source ${PROFILE}
+    echo "Detected your preferred shell is $PREF_SHELL. Run 'source $PROFILE' or start a new terminal session to use dojoup."
 }
+
+
+if [ "$#" -eq 0 ]; then
+    usage
+fi
 
 case $1 in
     init)
@@ -113,7 +111,7 @@ case $1 in
 
         source_profile
 
-        ${DOJOUP_DIR}/bin/dojoup
+        dojoup
         ;;
     install-madara)
         echo "Install madara..."
