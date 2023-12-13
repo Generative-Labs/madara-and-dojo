@@ -4,6 +4,7 @@ set -e
 #!/bin/bash
 BASE_DIR=${XDG_CONFIG_HOME:-$HOME}
 MADUP_DIR=${MADUP_DIR-"$BASE_DIR/.madup"}
+DOJOUP_DIR=${DOJOUP_DIR-"$BASE_DIR/.dojo"}
 
 function install_madara() {
     os=$(uname -s | awk '{ print tolower($0) }')
@@ -72,6 +73,35 @@ if [ "$#" -eq 0 ]; then
     usage
 fi
 
+
+function source_profile() {
+    # Store the correct profile file (i.e. .profile for bash or .zshenv for ZSH).
+    case $SHELL in
+    */zsh)
+        PROFILE=${ZDOTDIR-"$HOME"}/.zshenv
+        PREF_SHELL=zsh
+        ;;
+    */bash)
+        PROFILE=$HOME/.bashrc
+        PREF_SHELL=bash
+        ;;
+    */fish)
+        PROFILE=$HOME/.config/fish/config.fish
+        PREF_SHELL=fish
+        ;;
+    */ash)
+        PROFILE=$HOME/.profile
+        PREF_SHELL=ash
+        ;;
+    *)
+        echo "dojoup: could not detect shell, manually add ${DOJOUP_DIR} to your PATH."
+        exit 1
+    esac
+
+
+    source ${PROFILE}
+}
+
 case $1 in
     init)
         echo "Install madara..."
@@ -80,6 +110,8 @@ case $1 in
         echo "Initializing the dojoup..."
         # Add your init code here
         curl -L https://install.dojoengine.org | bash
+
+        source_profile
 
         dojoup
         ;;

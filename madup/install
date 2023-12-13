@@ -43,6 +43,8 @@ case $SHELL in
     exit 1
 esac
 
+source ${PROFILE}
+
 # Only add madup if it isn't already in PATH.
 if [[ ":$PATH:" != *":${MADUP_BIN_DIR}:"* ]]; then
     # Add the madup directory to the path and ensure the old PATH variables remain.
